@@ -1,0 +1,21 @@
+[project]
+name = "document-analyst-assistant"
+version = "0.1.0"
+description = "This repository contains a powerful tool designed to assist Business Analysts (BA), developers, and testers in reading, understanding, and analyzing Business Requirement Documents (BRD), Functional Specifications, and Testing Documents."
+authors = [
+    {name = "0121ienT",email = "phamdt203@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+]
+
+[tool.poetry]
+
+[tool.poetry.group.dev.dependencies]
+chainlit = "^2.4.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

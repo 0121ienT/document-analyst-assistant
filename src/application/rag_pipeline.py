@@ -1,11 +1,17 @@
-from domain.rag_pipeline import IRAGPipeline
-from application.indexing import ChromaDBIndexer
+from src.domain.rag_pipeline import IRAGPipeline
+from src.application.indexing import ChromaDBIndexer
 from langchain.prompts import PromptTemplate
 from langchain.schema.runnable import RunnableMap, RunnablePassthrough
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 import os 
+from dotenv import load_dotenv
+import os
+
+# Load biến môi trường từ file .env
+load_dotenv()
+
 class RAGPipeline(IRAGPipeline):
     async def process(self, user_message: str):
         # truy van du lieu

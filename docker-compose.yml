@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: document-analyst
+    restart: always
+    ports:
+      - "8000:8000"  # API chạy trên FastAPI
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - chroma_db
+
+  frontend:
+    build: ./frontend
+    container_name: document-frontend
+    restart: always
+    ports:
+      - "8501:8501"  # Streamlit chạy trên port 8501
+    volumes:
+      - ./frontend:/frontend
+    working_dir: /frontend
+    command: ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    depends_on:
+      - app
+
+  chroma_db:
+    image: chromadb/chroma
+    container_name: chroma-db
+    restart: always
+    ports:
+      - "8001:8000"

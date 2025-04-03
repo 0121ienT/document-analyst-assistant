@@ -10,7 +10,7 @@ import os
 from src.application.process_file import process_file
 from src.domain.indexing.chunking import TextChunker 
 from src.domain.embedder import Embedder
-from src.domain.chromaIndexer import ChromaDBIndexer
+from infra.chromaIndexer import ChromaDBIndexer
 from fastapi.responses import JSONResponse
 
 # Load biến môi trường từ file .env

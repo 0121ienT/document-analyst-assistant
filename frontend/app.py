@@ -1,40 +1,72 @@
-import streamlit as st
+import chainlit as cl
 import requests
+import asyncio
+BASE_URL = "http://localhost:8001"  # Địa chỉ FastAPI server
 
-# Sidebar để nhập API URL
-with st.sidebar:
-    api_url = st.text_input("API URL", key="chatbot_api_url", value="http://localhost:8000/chat")
+@cl.on_chat_start
+async def init():
+    await cl.Message(
+        content="Hello! Welcome to Data Helper Chatbot! You can chat or attach a file using the paperclip icon.").send()
 
-st.title("💬 Chatbot")
-st.caption("🚀 A Streamlit chatbot powered by your API")
+@cl.on_message
+async def main(message: cl.Message):
+    # Kiểm tra xem có file được attach không
+    if message.elements:  # Nếu có file trong message
+        for element in message.elements:
+            if isinstance(element, cl.File):  # Xác nhận là file
+                essage_content = f"Bạn đợi chút nhé mình đang load tài liệu nhaaa . "
+                msg = cl.Message(content="")
+                await msg.send()
+                for word in essage_content.split():
+                    await msg.stream_token(word + " ")
+                    await asyncio.sleep(0.15)  # Độ trễ giữa các từ
+                await msg.update()
+                await process_uploaded_file(element)
+    else:  # Nếu chỉ có text
+        try:
+            response = requests.post(
+                f"{BASE_URL}/chat",
+                json={"text": message.content},
+                stream=True
+            )
+            print(f"Chat API status: {response.status_code}")
+            response.raise_for_status()
+            msg = cl.Message(content="")
+            await msg.send()
+            for chunk in response.iter_content(chunk_size=1024):
+                if chunk:
+                    await msg.stream_token(chunk.decode("utf-8"))
+            await msg.update()
+        except requests.exceptions.RequestException as e:
+            await cl.Message(content=f"Lỗi khi gọi API: {str(e)}").send()
 
-# Khởi tạo session lưu tin nhắn
-if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "Tôi có thể giúp gì cho bạn ?"}]
-
-# Hiển thị tin nhắn trước đó
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
-
-# Gửi tin nhắn mới
-if prompt := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
-
-    # Gọi API với streaming
+async def process_uploaded_file(file):
     try:
-        with requests.post(api_url, json={"text": prompt}, stream=True) as response:
-            response.raise_for_status()  # Kiểm tra lỗi HTTP
-
-            msg = ""
-            chat_placeholder = st.empty()  # Tạo vùng hiển thị phản hồi
-
-            for chunk in response.iter_content(chunk_size=32):  # Đọc từng phần nhỏ
-                text_chunk = chunk.decode("utf-8")
-                msg += text_chunk
-                chat_placeholder.markdown(msg)  # Cập nhật nội dung hiển thị dần dần
-
-        # Lưu tin nhắn của chatbot
-        st.session_state.messages.append({"role": "assistant", "content": msg})
+        # Đọc nội dung file từ đường dẫn tạm thời
+        with open(file.path, "rb") as f:
+            file_content = f.read()
+        print(f"Sending file: {file.name}, size: {len(file_content)} bytes")
+        
+        # Gửi file lên API /upload-file/
+        response = requests.post(
+            f"{BASE_URL}/upload-file/",
+            files={"file": (file.name, file_content, file.type)}
+        )
+        print(f"Upload API status: {response.status_code}, response: {response.text}")
+        response.raise_for_status()
+        
+        result = response.json()
+        message_content = f"Đã upload File {file.name} thành công . Bạn muốn hỏi gì ạ ."
+        msg = cl.Message(content="")
+        await msg.send()
+        for word in message_content.split():
+            await msg.stream_token(word + " ")
+            await asyncio.sleep(0.15)  # Độ trễ giữa các từ
+        await msg.update()
     except requests.exceptions.RequestException as e:
-        st.error(f"Error calling API: {e}")
+        print(f"Upload error: {str(e)}")
+        await cl.Message(content=f"Lỗi khi upload file: {str(e)}").send()
+
+@cl.on_stop
+async def on_stop():
+    await cl.Message(content="Phiên chat đã kết thúc.").send()

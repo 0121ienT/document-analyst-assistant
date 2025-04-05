@@ -1,7 +1,7 @@
 # AI Assistant for Project Document Analysis
 
 ## Giới thiệu
-Dự án **AI Assistant for Project Document Analysis** là một trợ lý AI được thiết kế để hỗ trợ các Business Analyst (BA) trong việc phân tích tài liệu dự án. Trợ lý này sử dụng công nghệ xử lý ngôn ngữ tự nhiên (NLP) để tự động trích xuất thông tin quan trọng, phân loại yêu cầu, và cung cấp gợi ý dựa trên các tài liệu như SRS (Software Requirement Specification), BRD (Business Requirement Document), hoặc các ghi chú dự án.
+Dự án **AI Assistant for Project Document Analysis** là một trợ lý AI được thiết kế để hỗ trợ các Business Analyst (BA) trong việc phân tích tài liệu dự án. Trợ lý này sử dụng công nghệ xử lý ngôn ngữ tự nhiên (NLP) để tự động trích xuất thông tin quan trọng, phân loại yêu cầu, và cung cấp gợi ý dựa trên các tài liệu như SRS (Software Requirement Specification), BRD (Business Requirement Document), hoặc các ghi chú dự án, phân tích các nguồn tài liệu khác nhau.
 
 Mục tiêu của dự án là giảm thiểu thời gian xử lý thủ công, tăng độ chính xác trong phân tích yêu cầu, và hỗ trợ BA trong việc lập kế hoạch và giao tiếp với các bên liên quan.
 
@@ -9,7 +9,7 @@ Mục tiêu của dự án là giảm thiểu thời gian xử lý thủ công, 
 - **Trích xuất thông tin**: Tự động nhận diện và rút trích các yêu cầu chính từ tài liệu (ví dụ: functional/non-functional requirements).
 - **Phân loại yêu cầu**: Gắn nhãn yêu cầu theo loại (business rules, user needs, technical constraints).
 - **Gợi ý cải tiến**: Đưa ra đề xuất tối ưu hóa yêu cầu dựa trên dữ liệu lịch sử hoặc best practices.
-- **Hỗ trợ đa định dạng**: Xử lý tài liệu dạng PDF, Word, và văn bản thô.
+- **Hỗ trợ đa định dạng**: Xử lý tài liệu dạng PDF, Word, và văn bản được thêm vào.
 
 ## Công nghệ sử dụng
 - **Ngôn ngữ lập trình**: Python
@@ -50,7 +50,7 @@ Chúng tôi hoan nghênh mọi đóng góp! Để tham gia:
 
 ## Tác giả
 - **Nguyễn Thị Vân** - Business Analyst & AI Enthusiast  
-  - Email: [nguyenvank58t2@gmail.com](mailto:nguyenvank58t2@gmail.com)  
+  - Email: [nghean2501@gmail.com](mailto:nghean2501@gmail.com)  
   - GitHub: [vannnguyen](https://github.com/vannnguyen)
 
 ## Giấy phép

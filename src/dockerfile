@@ -2,16 +2,18 @@
 FROM python:3.10
 
 # Đặt thư mục làm việc trong container
-WORKDIR /app
+WORKDIR /src
 
 # Copy toàn bộ code vào container
 COPY . /app
 
 # Cài đặt thư viện từ requirements.txt
+COPY ../requirements.txt .
 RUN pip install -r requirements.txt
 
+
 # Mở cổng nếu dùng FastAPI (mặc định 8000)
-EXPOSE 8000
+EXPOSE 8001
 
 # Chạy ứng dụng
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8001"]

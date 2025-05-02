@@ -1,14 +1,14 @@
-from fastapi import APIRouter ,UploadFile , File 
+from fastapi import APIRouter, UploadFile, File
+
 # from src.services.query_handler import QueryHandler
-from src.api.models.schemas import QueryRequest, QueryResponse
+from src.api.models.schemas import QueryRequest
 from hashlib import md5
 from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 from src.application.rag_pipeline import RAGPipeline
 from dotenv import load_dotenv
-import os
 from src.application.process_file import process_file
-from src.domain.indexing.chunking import TextChunker 
+from src.domain.indexing.chunking import TextChunker
 from src.domain.embedder import Embedder
 from infra.chromaIndexer import ChromaDBIndexer
 from fastapi.responses import JSONResponse
@@ -23,12 +23,16 @@ router = APIRouter()
 @router.post("/chat")
 async def chat(request: QueryRequest):
     user_message = request.text
-    print("User Message:",user_message)
+    print("User Message:", user_message)
     if not isinstance(user_message, str):
-        raise HTTPException(status_code=400, detail="Lỗi: user_message phải là một chuỗi (str)")
+        raise HTTPException(
+            status_code=400, detail="Lỗi: user_message phải là một chuỗi (str)"
+        )
 
     if not user_message.strip():  # Kiểm tra rỗng
-        raise HTTPException(status_code=400, detail="Lỗi: user_message không được để trống")
+        raise HTTPException(
+            status_code=400, detail="Lỗi: user_message không được để trống"
+        )
 
     async def generate():
         try:
@@ -56,11 +60,13 @@ async def upload_file(file: UploadFile = File(...)):
     docs = process_file(file)  # Lấy văn bản từ file
 
     # Bước 2: Chia nhỏ tài liệu (Chunking)
-    chunker = TextChunker(method='semantic')
+    chunker = TextChunker(method="semantic")
     doc_chunked = chunker.chunk(docs)  # List[str]
 
     if not doc_chunked:
-        raise HTTPException(status_code=400, detail="Không tìm thấy nội dung hợp lệ sau khi chia nhỏ.")
+        raise HTTPException(
+            status_code=400, detail="Không tìm thấy nội dung hợp lệ sau khi chia nhỏ."
+        )
 
     # Bước 3: Tạo IDs cho từng đoạn văn bản
     ids = [md5(text.encode()).hexdigest() for text in doc_chunked]
@@ -73,10 +79,6 @@ async def upload_file(file: UploadFile = File(...)):
     indexer = ChromaDBIndexer(collection_name="langchain")
     indexer.add_texts(doc_chunked, text_embedded, ids)
 
-    return JSONResponse(content={"status": "success", "message": "Tải file thành công!"})
-
-    
-
-
-
-
+    return JSONResponse(
+        content={"status": "success", "message": "Tải file thành công!"}
+    )

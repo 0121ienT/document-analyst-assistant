@@ -1,7 +1,9 @@
 from langchain.embeddings import OpenAIEmbeddings
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
+
 
 def get_embedding(text: str, embeddings_model=None) -> list:
     """
@@ -15,9 +17,12 @@ def get_embedding(text: str, embeddings_model=None) -> list:
         list: Vector nhúng của văn bản đầu vào.
     """
     if embeddings_model is None:
-        embeddings_model = OpenAIEmbeddings(model=os.getenv("MODEL"), openai_api_key=os.getenv("OPENAI_API_KEY"))  # Mặc định sử dụng OpenAIEmbeddings
-    
+        embeddings_model = OpenAIEmbeddings(
+            model=os.getenv("MODEL"), openai_api_key=os.getenv("OPENAI_API_KEY")
+        )  # Mặc định sử dụng OpenAIEmbeddings
+
     return embeddings_model.embed_query(text)
+
 
 # # Ví dụ sử dụng với OpenAIEmbeddings
 # vector = get_embedding("What was the name mentioned in the conversation?")

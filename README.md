@@ -49,8 +49,8 @@ Chúng tôi hoan nghênh mọi đóng góp! Để tham gia:
 5. Tạo Pull Request.
 
 ## Tác giả
-- **Nguyễn Thị Vân** - Business Analyst & AI Enthusiast  
-  - Email: [nghean2501@gmail.com](mailto:nghean2501@gmail.com)  
+- **Nguyễn Thị Vân** - Business Analyst & AI Enthusiast
+  - Email: [nghean2501@gmail.com](mailto:nghean2501@gmail.com)
   - GitHub: [vannnguyen](https://github.com/vannnguyen)
 
 ## Giấy phép

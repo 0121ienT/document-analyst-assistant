@@ -1,7 +1,7 @@
 from io import BytesIO
 import pandas as pd
 from docx import Document
-from pypdf import PdfReader  
+from pypdf import PdfReader
 from typing import List
 
 
@@ -16,7 +16,9 @@ def load_pdf_from_file(pdf_file: BytesIO) -> List[str]:
         List[str]: Danh sách chứa nội dung văn bản từ các trang PDF.
     """
     reader = PdfReader(pdf_file)
-    text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
+    text = "\n".join(
+        [page.extract_text() for page in reader.pages if page.extract_text()]
+    )
     return [text]
 
 

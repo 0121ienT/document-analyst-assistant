@@ -3,6 +3,7 @@ from typing import List, Union
 from langchain_openai.embeddings import OpenAIEmbeddings
 import numpy as np
 
+
 class Embedder:
     """
     Lớp hỗ trợ tính toán embedding cho văn bản trong quá trình indexing.
@@ -16,12 +17,16 @@ class Embedder:
         api_key = os.getenv("OPENAI_API_KEY")
 
         if api_key is None:
-            raise ValueError("API key không được tìm thấy. Hãy thiết lập biến môi trường OPENAI_API_KEY.")
+            raise ValueError(
+                "API key không được tìm thấy. Hãy thiết lập biến môi trường OPENAI_API_KEY."
+            )
 
         self.model: str = model
         self.embedder = OpenAIEmbeddings(model=model, openai_api_key=api_key)
 
-    def embed_text(self, text: Union[str, List[str]]) -> Union[List[float], List[List[float]]]:
+    def embed_text(
+        self, text: Union[str, List[str]]
+    ) -> Union[List[float], List[List[float]]]:
         """
         Tạo embedding từ văn bản đầu vào.
 
@@ -50,6 +55,7 @@ class Embedder:
         """
         embeddings = self.embedder.embed_documents(texts)
         return np.array(embeddings)
+
 
 # Ví dụ sử dụng
 if __name__ == "__main__":

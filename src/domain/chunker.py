@@ -1,8 +1,13 @@
 from typing import List, Dict, Any
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_openai.embeddings import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
-import os 
+from langchain.text_splitter import (
+    CharacterTextSplitter,
+    RecursiveCharacterTextSplitter,
+)
+import os
+
+
 class TextChunker:
     """
     Lớp hỗ trợ chunking văn bản với nhiều phương pháp khác nhau.
@@ -25,28 +30,28 @@ class TextChunker:
         if method == "semantic":
             model: str = os.getenv("MODEL_EMBEDDEING")
             buffer_size: int = kwargs.get("buffer_size", 1)
-            breakpoint_threshold_amount: int = kwargs.get("breakpoint_threshold_amount", 70)
+            breakpoint_threshold_amount: int = kwargs.get(
+                "breakpoint_threshold_amount", 70
+            )
             embedding_model = OpenAIEmbeddings(model=model)
             self.chunker = SemanticChunker(
                 buffer_size=buffer_size,
                 breakpoint_threshold_amount=breakpoint_threshold_amount,
-                embeddings=embedding_model
+                embeddings=embedding_model,
             )
 
         elif method == "character":
             chunk_size: int = kwargs.get("chunk_size", 1000)
             chunk_overlap: int = kwargs.get("chunk_overlap", 200)
             self.chunker = CharacterTextSplitter(
-                chunk_size=chunk_size, 
-                chunk_overlap=chunk_overlap
+                chunk_size=chunk_size, chunk_overlap=chunk_overlap
             )
 
         elif method == "recursive":
             chunk_size: int = kwargs.get("chunk_size", 1000)
             chunk_overlap: int = kwargs.get("chunk_overlap", 200)
             self.chunker = RecursiveCharacterTextSplitter(
-                chunk_size=chunk_size, 
-                chunk_overlap=chunk_overlap
+                chunk_size=chunk_size, chunk_overlap=chunk_overlap
             )
 
         else:
@@ -73,13 +78,13 @@ class TextChunker:
 # # 📌 Ví dụ sử dụng
 # # =========================
 
-# docs = """Hôm nay là một ngày tuyệt vời để bắt đầu bằng một tách cà phê nóng hổi. 
+# docs = """Hôm nay là một ngày tuyệt vời để bắt đầu bằng một tách cà phê nóng hổi.
 # Sau khi thưởng thức bữa sáng, tôi quyết định đi dạo trong công viên gần
 # nhà, nơi cây cối xanh tươi và tiếng chim hót rộn ràng. Tuy nhiên, tôi hơi
 # thất vọng vì công viên khá đông đúc, khiến không khí yên bình thường ngày
 # bị phá vỡ. Mặc dù vậy, tôi vẫn tìm được một góc nhỏ yên tĩnh để đọc cuốn
-# sách yêu thích. Sau buổi sáng trong lành, tôi quay về nhà để làm việc. 
-# Công việc hôm nay khá bận rộn, nhưng tôi cảm thấy rất hài lòng vì hoàn 
+# sách yêu thích. Sau buổi sáng trong lành, tôi quay về nhà để làm việc.
+# Công việc hôm nay khá bận rộn, nhưng tôi cảm thấy rất hài lòng vì hoàn
 # thành được một dự án lớn. Buổi tối, tôi tự thưởng cho mình một bữa ăn ngon
 # và xem một bộ phim hài trước khi đi ngủ."""
 

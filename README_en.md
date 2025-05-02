@@ -53,8 +53,8 @@ We welcome contributions! To get involved:
 5. Submit a Pull Request.
 
 ## Author
-- **Van Nguyen Thi** - Business Analyst & AI Enthusiast  
-  - Email: [nguyenvank58t2@gmail.com](mailto:nguyenvank58t2@gmail.com)  
+- **Van Nguyen Thi** - Business Analyst & AI Enthusiast
+  - Email: [nguyenvank58t2@gmail.com](mailto:nguyenvank58t2@gmail.com)
   - GitHub: [vannnguyen](https://github.com/vannnguyen)
 
 ## License

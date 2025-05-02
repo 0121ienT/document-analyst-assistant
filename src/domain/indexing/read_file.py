@@ -1,11 +1,12 @@
 from io import BytesIO
 from fastapi import UploadFile, HTTPException
 from typing import List
-from src.shared.utils.indexing.process_file import load_docx_from_file , load_excel_from_file , load_pdf_from_file , load_txt_from_file
-from docx import Document
-from pypdf import PdfReader  
-import pandas as pd
-
+from src.shared.utils.indexing.process_file import (
+    load_docx_from_file,
+    load_excel_from_file,
+    load_pdf_from_file,
+    load_txt_from_file,
+)
 
 
 def process_file(file: UploadFile) -> List[str]:
@@ -25,7 +26,9 @@ def process_file(file: UploadFile) -> List[str]:
     print(f"📂 Đọc được {len(contents)} bytes từ file {file.filename}")
 
     if not contents:
-        raise HTTPException(status_code=400, detail="Lỗi đọc file! File có thể bị hỏng.")
+        raise HTTPException(
+            status_code=400, detail="Lỗi đọc file! File có thể bị hỏng."
+        )
 
     file_extension = file.filename.split(".")[-1].lower()
     file_obj = BytesIO(contents)

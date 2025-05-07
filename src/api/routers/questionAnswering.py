@@ -1,11 +1,11 @@
 from fastapi import APIRouter, UploadFile, File
 
 # from src.services.query_handler import QueryHandler
-from src.api.models.schemas import QueryRequest
+from api.models.schemas import QueryRequest
 from hashlib import md5
 from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
-from src.application.rag_pipeline import RAGPipeline
+from application.rag_pipeline import RAGPipeline
 from dotenv import load_dotenv
 from src.application.process_file import process_file
 from src.domain.indexing.chunking import TextChunker

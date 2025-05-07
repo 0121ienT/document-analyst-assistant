@@ -2,7 +2,7 @@ import chainlit as cl
 import requests
 import asyncio
 
-BASE_URL = "http://localhost:8001"  # Địa chỉ FastAPI server
+BASE_URL = "http://localhost:8000"  # Địa chỉ FastAPI server
 
 
 @cl.on_chat_start

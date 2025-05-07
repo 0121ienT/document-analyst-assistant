@@ -1,7 +1,7 @@
 from io import BytesIO
 from fastapi import UploadFile, HTTPException
 from typing import List
-from src.shared.utils.indexing.process_file import (
+from shared.utils.indexing.process_file import (
     load_docx_from_file,
     load_excel_from_file,
     load_pdf_from_file,

@@ -1,5 +1,5 @@
-from src.domain.rag_pipeline import IRAGPipeline
-from src.application.indexing import ChromaDBIndexer
+from domain.rag_pipeline import IRAGPipeline
+from .indexing import ChromaDBIndexer
 from langchain.prompts import PromptTemplate
 from langchain.schema.runnable import RunnableMap, RunnablePassthrough
 from langchain_openai import ChatOpenAI

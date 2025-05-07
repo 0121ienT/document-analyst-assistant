@@ -1,1 +1,1 @@
-from api.routers.questionAnswering import router
+from .questionAnswering import router

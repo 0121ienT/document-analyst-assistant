@@ -1,1 +1,1 @@
-from src.api.models import schemas
+from .schemas import QueryRequest, QueryResponse

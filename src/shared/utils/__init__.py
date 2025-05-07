@@ -1,0 +1,6 @@
+from .indexing import (
+    load_docx_from_file,
+    load_excel_from_file,
+    load_pdf_from_file,
+    load_txt_from_file,
+)

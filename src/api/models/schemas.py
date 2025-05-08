@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 
+
 class QueryRequest(BaseModel):
-    text: str 
+    text: str
+
 
 class QueryResponse(BaseModel):
     response: str

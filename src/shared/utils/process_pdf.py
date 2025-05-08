@@ -2,6 +2,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
 
+
 def process_pdf(documents, embedding_model=None):
     print(f"Nhận {len(documents)} tài liệu để xử lý.")
     if not documents:

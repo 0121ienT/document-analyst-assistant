@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class RAGPipeline(IRAGPipeline):
     async def process(self, user_message: str):
         # truy van du lieu

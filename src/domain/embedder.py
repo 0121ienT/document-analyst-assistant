@@ -3,6 +3,7 @@ from typing import List, Union
 from langchain_openai.embeddings import OpenAIEmbeddings
 import numpy as np
 
+
 class Embedder:
     """
     Lớp hỗ trợ tính toán embedding cho văn bản trong quá trình indexing.

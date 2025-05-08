@@ -8,6 +8,7 @@ from shared.utils.indexing.process_file import (
     load_txt_from_file,
 )
 
+
 def process_file(file: UploadFile) -> List[str]:
     """
     Xử lý file tải lên và trả về nội dung dưới dạng danh sách chuỗi.

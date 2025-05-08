@@ -38,14 +38,12 @@ class ChromaDBIndexer:
             raise ValueError("Số lượng texts, embeddings và ids phải bằng nhau!")
 
         existing_ids = set(self.collection.get()["ids"])
-        
+
         new_ids = []
         for original_id in ids:
             new_id = original_id
             while new_id in existing_ids:
-                new_id = (
-                    f"{original_id}_{uuid.uuid4().hex[:8]}"
-                )
+                new_id = f"{original_id}_{uuid.uuid4().hex[:8]}"
             new_ids.append(new_id)
             existing_ids.add(new_id)
 

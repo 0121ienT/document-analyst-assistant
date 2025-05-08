@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from api import router  # Import router từ file chứa API endpoints
+from api import router
 from dotenv import load_dotenv
 
-# Load biến môi trường từ file .env
 load_dotenv()
 app = FastAPI()
 

@@ -7,9 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 import os
 from dotenv import load_dotenv
 
-# Load biến môi trường từ file .env
 load_dotenv()
-
 
 class RAGPipeline(IRAGPipeline):
     async def process(self, user_message: str):

@@ -1,6 +1,5 @@
 from langchain.load import dumps, loads
 
-
 def get_unique_union(documents: list[list]):
     """Unique union of retrieved docs"""
     # Flatten list of lists, and convert each Document to string

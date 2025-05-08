@@ -1,9 +1,7 @@
 from pydantic import BaseModel
 
-
 class QueryRequest(BaseModel):
-    text: str  # Trường này phải có tên là "text" để khớp với request
-
+    text: str 
 
 class QueryResponse(BaseModel):
     response: str

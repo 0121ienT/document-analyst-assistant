@@ -13,8 +13,6 @@ from src.domain.embedder import Embedder
 from infra.chromaIndexer import ChromaDBIndexer
 from fastapi.responses import JSONResponse
 
-# Load biến môi trường từ file .env
-
 load_dotenv()
 
 router = APIRouter()
@@ -29,7 +27,7 @@ async def chat(request: QueryRequest):
             status_code=400, detail="Lỗi: user_message phải là một chuỗi (str)"
         )
 
-    if not user_message.strip():  # Kiểm tra rỗng
+    if not user_message.strip():
         raise HTTPException(
             status_code=400, detail="Lỗi: user_message không được để trống"
         )
@@ -37,7 +35,7 @@ async def chat(request: QueryRequest):
     async def generate():
         try:
             ragger = RAGPipeline()
-            async for chunk in ragger.process(user_message):  # Dùng async for
+            async for chunk in ragger.process(user_message):
                 yield str(chunk)
         except Exception as e:
             yield f"Lỗi khi xử lý yêu cầu: {str(e)}"
@@ -56,26 +54,21 @@ async def upload_file(file: UploadFile = File(...)):
     Returns:
         dict: Kết quả xử lý file.
     """
-    # Bước 1: Load nội dung tài liệu
-    docs = process_file(file)  # Lấy văn bản từ file
+    docs = process_file(file)
 
-    # Bước 2: Chia nhỏ tài liệu (Chunking)
     chunker = TextChunker(method="semantic")
-    doc_chunked = chunker.chunk(docs)  # List[str]
+    doc_chunked = chunker.chunk(docs)
 
     if not doc_chunked:
         raise HTTPException(
             status_code=400, detail="Không tìm thấy nội dung hợp lệ sau khi chia nhỏ."
         )
 
-    # Bước 3: Tạo IDs cho từng đoạn văn bản
     ids = [md5(text.encode()).hexdigest() for text in doc_chunked]
 
-    # Bước 4: Chuyển văn bản thành vector embeddings
     embedder = Embedder()
-    text_embedded = embedder.embed_text(doc_chunked)  # List[list[float]]
+    text_embedded = embedder.embed_text(doc_chunked)
 
-    # Bước 5: Lưu vào ChromaDB
     indexer = ChromaDBIndexer(collection_name="langchain")
     indexer.add_texts(doc_chunked, text_embedded, ids)
 

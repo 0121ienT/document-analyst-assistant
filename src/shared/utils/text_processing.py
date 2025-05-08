@@ -4,11 +4,9 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk.corpus import wordnet as wn
 import spacy
 
-# Tải các gói cần thiết
 nltk.download("wordnet")
 nltk.download("omw-1.4")
 nltk.download("averaged_perceptron_tagger_eng")
-
 
 class TextProcessor:
     def __init__(self) -> None:

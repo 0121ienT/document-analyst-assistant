@@ -22,10 +22,3 @@ def get_embedding(text: str, embeddings_model=None) -> list:
         )  # Mặc định sử dụng OpenAIEmbeddings
 
     return embeddings_model.embed_query(text)
-
-
-# # Ví dụ sử dụng với OpenAIEmbeddings
-# vector = get_embedding("What was the name mentioned in the conversation?")
-
-# # In ra 5 giá trị đầu tiên của vector nhúng
-# print(vector[:5])

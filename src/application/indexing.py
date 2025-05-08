@@ -19,7 +19,7 @@ class ChromaDBIndexer:
             collection_name (str): Tên collection trong ChromaDB.
             model_name (str, optional): Model embedding của OpenAI. Mặc định là "text-embedding-ada-002".
         """
-        self.client = chromadb.PersistentClient(path="./chroma_db")  # Lưu trữ dữ liệu
+        self.client = chromadb.PersistentClient(path="./chroma_db")
         self.embedding_model = OpenAIEmbeddings(model=model_name)
         self.collection = self.client.get_or_create_collection(collection_name)
 
@@ -37,21 +37,18 @@ class ChromaDBIndexer:
         if len(texts) != len(embeddings) or len(texts) != len(ids):
             raise ValueError("Số lượng texts, embeddings và ids phải bằng nhau!")
 
-        # Lấy danh sách ID đã tồn tại trong collection
-        existing_ids = set(self.collection.get()["ids"])  # Lấy danh sách ID hiện có
-
-        # Xử lý từng ID để tránh trùng lặp
+        existing_ids = set(self.collection.get()["ids"])
+        
         new_ids = []
         for original_id in ids:
             new_id = original_id
-            while new_id in existing_ids:  # Nếu trùng thì tạo ID mới
+            while new_id in existing_ids:
                 new_id = (
-                    f"{original_id}_{uuid.uuid4().hex[:8]}"  # Gắn thêm 8 ký tự UUID
+                    f"{original_id}_{uuid.uuid4().hex[:8]}"
                 )
             new_ids.append(new_id)
-            existing_ids.add(new_id)  # Cập nhật danh sách ID đã tồn tại
+            existing_ids.add(new_id)
 
-        # Thêm vào collection với ID mới
         self.collection.add(ids=new_ids, documents=texts, embeddings=embeddings)
 
     def query(self, query_text: str, top_k: int = 5) -> List[str]:

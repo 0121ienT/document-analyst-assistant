@@ -1,11 +1,14 @@
 FROM python:3.10
 
-WORKDIR /src
+WORKDIR /app
+
+COPY pyproject.toml uv.lock /app/
+
+RUN pip install uv
+
+RUN uv sync
 
 COPY . /app
-
-COPY ../requirements.txt .
-RUN pip install -r requirements.txt
 
 EXPOSE 8000
 

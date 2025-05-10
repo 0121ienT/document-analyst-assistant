@@ -13,7 +13,7 @@ class Embedder:
         """
         Khởi tạo bộ embedding với mô hình OpenAI từ biến môi trường.
         """
-        model = os.getenv("MODEL_EMBEDDEING")
+        model = os.getenv("MODEL_EMBEDDING")
         api_key = os.getenv("OPENAI_API_KEY")
 
         if api_key is None:

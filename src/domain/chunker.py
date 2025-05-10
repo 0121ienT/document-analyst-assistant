@@ -28,7 +28,7 @@ class TextChunker:
         self.kwargs: Dict[str, Any] = kwargs
 
         if method == "semantic":
-            model: str = os.getenv("MODEL_EMBEDDEING")
+            model: str = os.getenv("MODEL_EMBEDDING")
             buffer_size: int = kwargs.get("buffer_size", 1)
             breakpoint_threshold_amount: int = kwargs.get(
                 "breakpoint_threshold_amount", 70

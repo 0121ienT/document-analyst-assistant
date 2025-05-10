@@ -7,6 +7,10 @@ __pycache__/
 *.so
 
 .lightning_studio/.studiorc
+*.docx
+chroma_db/
+*.bin
+
 
 # Distribution / packaging
 .Python

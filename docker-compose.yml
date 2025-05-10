@@ -4,8 +4,9 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
     container_name: chainlit_frontend
+    image: phamdt203/chainlit_frontend:latest
     ports:
-      - "8001:8001"
+      - "8002:8002"
     depends_on:
       - backend
     networks:
@@ -19,6 +20,7 @@ services:
       context: .
       dockerfile: src/Dockerfile
     container_name: fastapi_backend
+    image: phamdt203/fastapi_backend:latest
     ports:
       - "8001:8001"
     networks:

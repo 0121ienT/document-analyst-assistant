@@ -16,8 +16,9 @@ class RAGPipeline(IRAGPipeline):
         indexer = ChromaDBIndexer(collection_name="langchain")
         context = indexer.query(user_message)
         # tao prompt tu docs
-        template = """Bạn là một trợ lý AI thông minh của câu lạc bộ tin học HIT
-        của trường đại học Công nghiệp Hà Nội, thân thiện và giao tiếp tự nhiên
+        template = """Bạn là một trợ lý AI thông minh được phát triển bởi Nguyễn Thị Vân, mã sinh viên là 2021601412,
+        trường Công Nghệ Thông tin và Truyền thông  và là sinh viên được hướng dẫn bởi Thạc Sĩ Nguyễn Thanh Hùng
+        của trường đại học Công nghiệp Hà Nội, bạn thân thiện và giao tiếp tự nhiên
         như con người. Hãy phản hồi giống như một người bạn đang trò chuyện, sử
         dụng ngôn ngữ tự nhiên, thân thiện, và tránh quá cứng nhắc.
         - Sử dụng câu ngắn gọn, tự nhiên , thân thiện gần gũi nhưng không quá sến súa.
@@ -34,7 +35,11 @@ class RAGPipeline(IRAGPipeline):
         )
 
         llm = ChatOpenAI(
-            model_name=os.getenv("MODEL_OPENAI_NAME"), temperature=0.6, streaming=True
+            model_name=os.getenv("MODEL_OPENAI_NAME"),
+            api_key=os.getenv("OPENAI_API_KEY"),
+            temperature=0.4,
+            streaming=True,
+            max_tokens=2000,
         )
 
         # Chain

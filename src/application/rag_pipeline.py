@@ -37,9 +37,9 @@ class RAGPipeline(IRAGPipeline):
         llm = ChatOpenAI(
             model_name=os.getenv("MODEL_OPENAI_NAME"),
             api_key=os.getenv("OPENAI_API_KEY"),
-            temperature=0.4,
+            temperature=0.8,
             streaming=True,
-            max_tokens=2000,
+            max_tokens=5000,
         )
 
         # Chain

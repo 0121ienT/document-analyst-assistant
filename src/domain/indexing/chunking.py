@@ -28,6 +28,7 @@ class TextChunker:
         self.kwargs: Dict[str, Any] = kwargs
 
         if method == "semantic":
+            print("we are using semantic chunking !!!\n")
             model: str = os.getenv("MODEL_EMBEDDING")
             buffer_size: int = kwargs.get("buffer_size", 1)
             breakpoint_threshold_amount: int = kwargs.get(
@@ -41,6 +42,7 @@ class TextChunker:
             )
 
         elif method == "character":
+            print("we are using character chunking !!!\n")
             chunk_size: int = kwargs.get("chunk_size", 1000)
             chunk_overlap: int = kwargs.get("chunk_overlap", 200)
             self.chunker = CharacterTextSplitter(
@@ -48,6 +50,7 @@ class TextChunker:
             )
 
         elif method == "recursive":
+            print("we are using recursive chunking !!!\n")
             chunk_size: int = kwargs.get("chunk_size", 1000)
             chunk_overlap: int = kwargs.get("chunk_overlap", 200)
             self.chunker = RecursiveCharacterTextSplitter(
@@ -69,42 +72,6 @@ class TextChunker:
         """
         if self.method == "semantic":
             chunks = self.chunker.create_documents(text)
-            return [chunk.page_content for chunk in chunks]
+            return [chunk.page_content.replace("\n", " ") for chunk in chunks]
         else:
             return self.chunker.split_text(text)
-
-
-# # =========================
-# # 📌 Ví dụ sử dụng
-# # =========================
-
-# docs = """Hôm nay là một ngày tuyệt vời để bắt đầu bằng một tách cà phê nóng hổi.
-# Sau khi thưởng thức bữa sáng, tôi quyết định đi dạo trong công viên gần
-# nhà, nơi cây cối xanh tươi và tiếng chim hót rộn ràng. Tuy nhiên, tôi hơi
-# thất vọng vì công viên khá đông đúc, khiến không khí yên bình thường ngày
-# bị phá vỡ. Mặc dù vậy, tôi vẫn tìm được một góc nhỏ yên tĩnh để đọc cuốn
-# sách yêu thích. Sau buổi sáng trong lành, tôi quay về nhà để làm việc.
-# Công việc hôm nay khá bận rộn, nhưng tôi cảm thấy rất hài lòng vì hoàn
-# thành được một dự án lớn. Buổi tối, tôi tự thưởng cho mình một bữa ăn ngon
-# và xem một bộ phim hài trước khi đi ngủ."""
-
-# # Chunking theo ngữ nghĩa
-# semantic_chunker = TextChunker(method="semantic")
-# chunks_semantic = semantic_chunker.chunk(docs)
-# print("📌 Chunking theo ngữ nghĩa:")
-# for i, chunk in enumerate(chunks_semantic):
-#     print(f"Chunk {i+1}:\n{chunk}\n")
-
-# # Chunking theo ký tự (fixed-size character splitting)
-# char_chunker = TextChunker(method="character", chunk_size=150, chunk_overlap=30)
-# chunks_character = char_chunker.chunk(docs)
-# print("📌 Chunking theo ký tự:")
-# for i, chunk in enumerate(chunks_character):
-#     print(f"Chunk {i+1}:\n{chunk}\n")
-
-# # Chunking theo recursive character splitting
-# recursive_chunker = TextChunker(method="recursive", chunk_size=150, chunk_overlap=30)
-# chunks_recursive = recursive_chunker.chunk(docs)
-# print("📌 Chunking theo recursive character splitting:")
-# for i, chunk in enumerate(chunks_recursive):
-#     print(f"Chunk {i+1}:\n{chunk}\n")

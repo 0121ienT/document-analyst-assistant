@@ -12,23 +12,23 @@ load_dotenv()
 
 class RAGPipeline(IRAGPipeline):
     async def process(self, user_message: str):
-        # truy van du lieu
         indexer = ChromaDBIndexer(collection_name="langchain")
         context = indexer.query(user_message)
-        # tao prompt tu docs
-        template = """Bạn là một trợ lý AI thông minh được phát triển bởi Nguyễn Thị Vân, mã sinh viên là 2021601412,
-        trường Công Nghệ Thông tin và Truyền thông  và là sinh viên được hướng dẫn bởi Thạc Sĩ Nguyễn Thanh Hùng
-        của trường đại học Công nghiệp Hà Nội, bạn thân thiện và giao tiếp tự nhiên
-        như con người. Hãy phản hồi giống như một người bạn đang trò chuyện, sử
-        dụng ngôn ngữ tự nhiên, thân thiện, và tránh quá cứng nhắc.
-        - Sử dụng câu ngắn gọn, tự nhiên , thân thiện gần gũi nhưng không quá sến súa.
-        - Nếu câu hỏi không rõ, hãy hỏi lại thay vì giả định sai.
-        - Đừng lặp lại câu từ cứng nhắc từ câu hỏi.
+        template = """Bạn là một ứng dụng AI cho phép người dùng gửi các nguồn thông tin lên và hỏi đáp thông tin của các nguồn đó.\n
+        Nội dung của context bên dưới chính là nội dung của các nguồn được gửi, hãy đọc nó cẩn thận và trả lời câu hỏi nhé.
+        - Sử dụng câu ngắn gọn, tự nhiên , thân thiện gần gũi nhưng không quá sến súa.\n
+        - Nếu câu hỏi không rõ, hãy hỏi lại thay vì giả định sai.\n
+        - Đừng lặp lại câu từ cứng nhắc từ câu hỏi.\n
+        Hãy suy nghĩ từng bước, bạn có thể lấy thêm context bên dưới để trả lời câu hỏi dưới đây một cách chính xác và nhớ giải thích từng bước \n
 
-        Context:
-        {context}
+        Context:\n
+        {context}\n
 
-        Question: {question}"""
+        Question: \n
+        {question}\n
+
+        Người phát triển bạn: Nguyễn Thị Vân - Mã sinh viên: 2021601412
+        """
 
         prompt = PromptTemplate(
             template=template, input_variables=["context", "question"]
@@ -37,9 +37,9 @@ class RAGPipeline(IRAGPipeline):
         llm = ChatOpenAI(
             model_name=os.getenv("MODEL_OPENAI_NAME"),
             api_key=os.getenv("OPENAI_API_KEY"),
-            temperature=0.8,
+            temperature=0.5,
             streaming=True,
-            max_tokens=5000,
+            max_tokens=4096,
         )
 
         # Chain
@@ -55,4 +55,36 @@ class RAGPipeline(IRAGPipeline):
         async for chunk in rag_chain.astream(
             {"context": context, "question": user_message}
         ):
+            yield chunk
+
+
+class FAQPipeline(IRAGPipeline):
+    async def process(self, user_message: str):
+        template = """
+        Hãy suy nghĩ từng bước để trả lời câu hỏi dưới đây một cách chính xác và nhớ giải thích từng bước \n
+
+        Question: \n
+        {question}"""
+
+        prompt = PromptTemplate(template=template, input_variables=["question"])
+
+        llm = ChatOpenAI(
+            model_name=os.getenv("MODEL_OPENAI_NAME"),
+            api_key=os.getenv("OPENAI_API_KEY"),
+            temperature=0.5,
+            streaming=True,
+            max_tokens=4096,
+        )
+
+        # Chain
+        rag_chain = (
+            RunnableMap(
+                {"context": RunnablePassthrough(), "question": RunnablePassthrough()}
+            )
+            | prompt
+            | llm
+            | StrOutputParser()
+        )
+
+        async for chunk in rag_chain.astream({"question": user_message}):
             yield chunk

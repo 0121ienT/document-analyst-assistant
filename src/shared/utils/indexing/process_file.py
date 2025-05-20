@@ -1,8 +1,8 @@
 from io import BytesIO
-import pandas as pd
 from docx import Document
 from pypdf import PdfReader
 from typing import List
+from openpyxl import load_workbook
 
 
 def load_pdf_from_file(pdf_file: BytesIO) -> List[str]:
@@ -60,5 +60,10 @@ def load_excel_from_file(excel_file: BytesIO) -> List[str]:
     Returns:
         List[str]: Danh sách chứa dữ liệu dưới dạng chuỗi CSV của sheet đầu tiên.
     """
-    df = pd.read_excel(excel_file, sheet_name=0)
-    return [df.to_csv(index=False)]  # Chuyển thành chuỗi CSV để lưu trữ dễ hơn
+    workbook = load_workbook(filename=excel_file)
+    sheet = workbook.active
+    data = []
+    for row in sheet.iter_rows(values_only=True):
+        data.append(row)
+    docs = "\n".join([str(row) for row in data])
+    return [docs]

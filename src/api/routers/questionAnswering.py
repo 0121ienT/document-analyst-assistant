@@ -3,7 +3,7 @@ from api.models.schemas import QueryRequest
 from hashlib import md5
 from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
-from application.rag_pipeline import RAGPipeline
+from application.rag_pipeline import RAGPipeline, FAQPipeline
 from dotenv import load_dotenv
 from application.process_file import process_file
 from domain.indexing.chunking import TextChunker
@@ -41,6 +41,31 @@ async def chat(request: QueryRequest):
     return StreamingResponse(generate(), media_type="text/plain")
 
 
+@router.post("/chat-faq")
+async def chat_faq(request: QueryRequest):
+    user_message = request.text
+    print("User Message:", user_message)
+    if not isinstance(user_message, str):
+        raise HTTPException(
+            status_code=400, detail="Lỗi: user_message phải là một chuỗi (str)"
+        )
+
+    if not user_message.strip():
+        raise HTTPException(
+            status_code=400, detail="Lỗi: user_message không được để trống"
+        )
+
+    async def generate():
+        try:
+            faqqer = FAQPipeline()
+            async for chunk in faqqer.process(user_message):
+                yield str(chunk)
+        except Exception as e:
+            yield f"Lỗi khi xử lý yêu cầu: {str(e)}"
+
+    return StreamingResponse(generate(), media_type="text/plain")
+
+
 @router.post("/upload-file/")
 async def upload_file(file: UploadFile = File(...)):
     """
@@ -56,6 +81,9 @@ async def upload_file(file: UploadFile = File(...)):
 
     chunker = TextChunker(method="semantic")
     doc_chunked = chunker.chunk(docs)
+
+    for chunk in doc_chunked:
+        print(chunk, end="\n\n\n")
 
     if not doc_chunked:
         raise HTTPException(

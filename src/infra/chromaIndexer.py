@@ -19,9 +19,9 @@ class ChromaDBIndexer:
             collection_name (str): Tên collection trong ChromaDB.
             model_name (str, optional): Model embedding của OpenAI. Mặc định là "text-embedding-ada-002".
         """
-        self.client = chromadb.PersistentClient(path="./chroma_db")  # Lưu trữ dữ liệu
+        self.client = chromadb.PersistentClient(path="./chroma_db/")
         self.embedding_model = OpenAIEmbeddings(model=model_name)
-        self.collection = self.client.get_or_create_collection(collection_name)
+        self.collection_name = collection_name
 
     def add_texts(
         self, texts: List[str], embeddings: List[List[float]], ids: List[str]
@@ -34,24 +34,20 @@ class ChromaDBIndexer:
             embeddings (List[List[float]]): Danh sách vector embeddings tương ứng.
             ids (List[str]): Danh sách ID tương ứng với văn bản.
         """
+        self.collection = self.client.get_or_create_collection(self.collection_name)
         if len(texts) != len(embeddings) or len(texts) != len(ids):
             raise ValueError("Số lượng texts, embeddings và ids phải bằng nhau!")
 
-        # Lấy danh sách ID đã tồn tại trong collection
-        existing_ids = set(self.collection.get()["ids"])  # Lấy danh sách ID hiện có
+        existing_ids = set(self.collection.get()["ids"])
 
-        # Xử lý từng ID để tránh trùng lặp
         new_ids = []
         for original_id in ids:
             new_id = original_id
-            while new_id in existing_ids:  # Nếu trùng thì tạo ID mới
-                new_id = (
-                    f"{original_id}_{uuid.uuid4().hex[:8]}"  # Gắn thêm 8 ký tự UUID
-                )
+            while new_id in existing_ids:
+                new_id = f"{original_id}_{uuid.uuid4().hex[:8]}"
             new_ids.append(new_id)
-            existing_ids.add(new_id)  # Cập nhật danh sách ID đã tồn tại
+            existing_ids.add(new_id)
 
-        # Thêm vào collection với ID mới
         self.collection.add(ids=new_ids, documents=texts, embeddings=embeddings)
 
     def query(self, query_text: str, top_k: int = 5) -> List[str]:
@@ -67,6 +63,6 @@ class ChromaDBIndexer:
         """
         query_embedding = self.embedding_model.embed_query(query_text)
         results = self.collection.query(
-            query_embeddings=[query_embedding], n_results=top_k
+            query_embeddings=[query_embedding], n_results=self.collection.count()
         )
         return results["documents"][0] if "documents" in results else []

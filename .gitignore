@@ -10,6 +10,14 @@ __pycache__/
 *.docx
 chroma_db/
 *.bin
+# Env vars.
+.env
+
+# Where we store PostgreSQL data.
+.data
+
+# Node modules.
+node_modules/
 
 
 # Distribution / packaging

@@ -62,7 +62,8 @@ class ChromaDBIndexer:
         """
         query_embedding = self.embedding_model.embed_query(query_text)
         results = self.collection.query(
-            query_embeddings=[query_embedding], n_results=top_k
+            query_embeddings=[query_embedding],
+            n_results=int(0.8 * self.collection.count()) + 1,
         )
         return results["documents"][0] if "documents" in results else []
 

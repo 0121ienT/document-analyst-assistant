@@ -19,6 +19,7 @@ router = APIRouter()
 @router.post("/chat")
 async def chat(request: QueryRequest):
     user_message = request.text
+
     print("User Message:", user_message)
     if not isinstance(user_message, str):
         raise HTTPException(
@@ -66,6 +67,9 @@ async def chat_faq(request: QueryRequest):
     return StreamingResponse(generate(), media_type="text/plain")
 
 
+indexer = ChromaDBIndexer(collection_name="langchain")
+
+
 @router.post("/upload-file/")
 async def upload_file(file: UploadFile = File(...)):
     """
@@ -95,9 +99,17 @@ async def upload_file(file: UploadFile = File(...)):
     embedder = Embedder()
     text_embedded = embedder.embed_text(doc_chunked)
 
-    indexer = ChromaDBIndexer(collection_name="langchain")
     indexer.add_texts(doc_chunked, text_embedded, ids)
 
     return JSONResponse(
         content={"status": "success", "message": "Tải file thành công!"}
     )
+
+
+@router.delete("/delete-collection/")
+async def delete_collection():
+    try:
+        indexer.client.delete_collection("langchain")
+        return {"message": "Collection langchain đã được xóa thành công."}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Lỗi khi xóa collection: {str(e)}")

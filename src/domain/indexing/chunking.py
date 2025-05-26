@@ -70,6 +70,8 @@ class TextChunker:
         Returns:
             List[str]: Danh sách các đoạn văn bản sau khi chunk.
         """
+        with open("output_chunk.txt", "w", encoding="utf-8") as f:
+            f.write(" ".join(text))
         if self.method == "semantic":
             chunks = self.chunker.create_documents(text)
             return [chunk.page_content.replace("\n", " ") for chunk in chunks]

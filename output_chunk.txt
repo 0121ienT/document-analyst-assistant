@@ -1,0 +1,7 @@
+GIỚI THIỆU
+Đề tài Xây dựng hệ thống LLMOps cho AI Chatbot hỏi đáp pháp luật tập trung vào thiết kế và triển khai
+hệ thống tích hợp LLM tiên tiến với RAG để trả lời chính xác các thắc mắc pháp lý. Hệ thống dùng
+FastAPI cho API, Jenkins tự động hóa CI/CD, Prometheus và Grafana giám sát hiệu suất, cùng OpenWebUI
+làm giao diện. Chatbot đảm bảo bảo mật, tuân thủ pháp lý, tự động cập nhật văn bản mới, cung cấp câu
+trả lời nhanh và đáng tin cậy.
+CÁC CÔNG NGHỆ SỬ DỤNG

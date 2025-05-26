@@ -19,6 +19,7 @@ class RAGPipeline(IRAGPipeline):
         - Sử dụng câu ngắn gọn, tự nhiên , thân thiện gần gũi nhưng không quá sến súa.\n
         - Nếu câu hỏi không rõ, hãy hỏi lại thay vì giả định sai.\n
         - Đừng lặp lại câu từ cứng nhắc từ câu hỏi.\n
+        - Nếu như Context và Question không liên quan tới nhau, thì hãy trả lời câu hỏi một cách bình thường và bỏ qua Context, không đề cập đến context.
         Hãy suy nghĩ từng bước, bạn có thể lấy thêm context bên dưới để trả lời câu hỏi dưới đây một cách chính xác và nhớ giải thích từng bước \n
 
         Context:\n
@@ -33,6 +34,8 @@ class RAGPipeline(IRAGPipeline):
         prompt = PromptTemplate(
             template=template, input_variables=["context", "question"]
         )
+
+        print(context)
 
         llm = ChatOpenAI(
             model_name=os.getenv("MODEL_OPENAI_NAME"),

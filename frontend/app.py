@@ -1,18 +1,28 @@
 import os
-import shutil
 import chainlit as cl
 from chainlit.types import ThreadDict
 import requests
 import asyncio
 
-# from dotenv import load_dotenv
-# load_dotenv()
 
 BASE_URL = "http://localhost:8000"
 
 
 async def process_uploaded_file(file):
     try:
+        # thread_id = cl.user_session.get("id")
+        # save_path = f"uploads/{thread_id}/{file.name}"
+        # if not os.path.exists(save_path):
+        #     os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        #     with open(save_path, "wb") as f:
+        #         f.write(file_content)
+        message_content = f"`{file.name}` uploading, it may take a minute!"
+        msg = cl.Message(content="")
+        await msg.send()
+        for word in message_content.split():
+            await msg.stream_token(word + " ")
+            await asyncio.sleep(0.15)
+        await msg.update()
         with open(file.path, "rb") as f:
             file_content = f.read()
         print(f"Sending file: {file.name}, size: {len(file_content)} bytes")
@@ -60,9 +70,11 @@ def auth_callback(username: str, password: str):
         return None
 
 
-# files = None
 @cl.on_chat_start
 async def init():
+    # result = requests.delete(
+    #     f"{BASE_URL}/delete-collection"
+    # )
     user = cl.user_session.get("user")
     chat_profile = cl.user_session.get("chat_profile")
     if chat_profile == "GPT-4o-mini":
@@ -71,6 +83,7 @@ async def init():
                 Welcome! We're excited to have you here, starting your session with the **"{chat_profile}"** chat profile tailored just for you."""
         ).send()
     else:
+        # thread_id = cl.user_session.get("id")
         files = None
         while files is None:
             files = await cl.AskFileMessage(
@@ -91,7 +104,7 @@ async def init():
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "application/vnd.ms-excel",  # .xls
                 ],
-                max_size_mb=50,
+                max_size_mb=10,
                 max_files=10,
                 timeout=300,
                 raise_on_timeout=True,
@@ -154,15 +167,8 @@ async def on_stop():
 
 @cl.on_chat_end
 def on_chat_end():
-    chroma_db_path = "chroma_db"
-    if os.path.exists(chroma_db_path) and os.path.isdir(chroma_db_path):
-        shutil.rmtree(chroma_db_path)
-        print("✅ Đã xóa thư mục chroma_db")
-    else:
-        print("⚠️ Thư mục chroma_db không tồn tại hoặc không phải là thư mục")
-    # global files
-    # files = None
-    print("The user disconnected!")
+    result = requests.delete(f"{BASE_URL}/delete-collection")
+    result
 
 
 @cl.on_chat_resume
